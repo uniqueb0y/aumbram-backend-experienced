@@ -1,0 +1,24 @@
+# Dependencies & build output
+node_modules/
+dist/
+coverage/
+
+# Secrets (commit .env.example only)
+.env
+.env.*
+!.env.example
+
+# Generated mock data (never commit)
+shared/mock-data/out/
+shared/mock-data/big/
+
+# Load-test results
+loadtest/results/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+loadtest/*.log
