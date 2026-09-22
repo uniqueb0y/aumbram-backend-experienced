@@ -1,0 +1,128 @@
+{
+  "machine": {
+    "cpus": 8,
+    "cpuModel": "Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz",
+    "ramGb": 4
+  },
+  "config": {
+    "file": "/data/events.csv",
+    "targetRate": 2500,
+    "batch": 100,
+    "durationS": 60,
+    "exhaustedInput": false
+  },
+  "throughput": {
+    "sendSeconds": 60,
+    "batchesSent": 1501,
+    "acceptedEventsPerSec": 0,
+    "offeredEventsPerSec": 2501
+  },
+  "latencyMs": {
+    "p50": 12.98642000000109,
+    "p95": 28.437936000002082,
+    "p99": 65.05523800000083,
+    "max": 133.8513509999998
+  },
+  "responses": {
+    "202": 1501
+  },
+  "rates": {
+    "errorRate": 0,
+    "rate429": 0,
+    "rate503": 0,
+    "retries": 0,
+    "networkErrors": 0,
+    "skippedForInFlight": 0
+  },
+  "events": {
+    "accepted": 0,
+    "duplicates": 150100,
+    "rejected": 0
+  },
+  "lag": {
+    "drainedSecondsAfterLoad": 0.055,
+    "eventToProcessedP95": "n/a",
+    "eventToProcessedP99": "n/a",
+    "samples": [
+      {
+        "t": 5,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 10,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 15,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 20,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 25,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 30,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 35,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 40,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 45,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 50,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 55,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 60,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      }
+    ]
+  },
+  "correctness": {
+    "uniqueIdsSent": 148672,
+    "storedInEvents": 148672,
+    "stillQueued": 0,
+    "processed": 148672,
+    "pass": true
+  }
+}

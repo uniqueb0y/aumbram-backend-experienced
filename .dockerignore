@@ -1,0 +1,8 @@
+node_modules
+dist
+.git
+.env
+shared/mock-data/out
+shared/mock-data/big
+loadtest/results
+coverage

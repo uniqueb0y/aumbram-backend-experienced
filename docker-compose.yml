@@ -1,0 +1,154 @@
+name: aumbram
+
+x-app-env: &app-env
+  DATABASE_URL: postgres://aumbram:aumbram@postgres:5432/aumbram
+  APP_KEY: ${APP_KEY:-dev_app_key_change_me}
+  INTERNAL_TOKEN: ${INTERNAL_TOKEN:-dev_internal_token_change_me}
+  LOG_LEVEL: ${LOG_LEVEL:-info}
+  INGEST_MAX_EVENTS: ${INGEST_MAX_EVENTS:-500}
+  INGEST_MAX_BYTES: ${INGEST_MAX_BYTES:-1048576}
+  RATE_LIMIT_EVENTS_PER_SEC: ${RATE_LIMIT_EVENTS_PER_SEC:-10000}
+  RATE_LIMIT_BURST: ${RATE_LIMIT_BURST:-20000}
+  QUEUE_MAX_DEPTH: ${QUEUE_MAX_DEPTH:-200000}
+  QUEUE_MAX_LAG_SECONDS: ${QUEUE_MAX_LAG_SECONDS:-60}
+  QUEUE_RETRY_AFTER_SECONDS: ${QUEUE_RETRY_AFTER_SECONDS:-5}
+  WORKER_EVENT_CONSUMERS: ${WORKER_EVENT_CONSUMERS:-2}
+  WORKER_EVENT_BATCH_SIZE: ${WORKER_EVENT_BATCH_SIZE:-1000}
+  WORKER_ORDER_CONSUMERS: ${WORKER_ORDER_CONSUMERS:-2}
+  SWEEP_INTERVAL_SECONDS: ${SWEEP_INTERVAL_SECONDS:-0}
+  INVARIANT_CHECK_INTERVAL_SECONDS: ${INVARIANT_CHECK_INTERVAL_SECONDS:-60}
+  ATTRIBUTION_RULE_VERSION: ${ATTRIBUTION_RULE_VERSION:-v1}
+
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    environment:
+      POSTGRES_USER: aumbram
+      POSTGRES_PASSWORD: aumbram
+      POSTGRES_DB: aumbram
+    command:
+      - postgres
+      - -c
+      - max_connections=200
+      - -c
+      - shared_buffers=256MB
+      - -c
+      - wal_compression=on
+      - -c
+      - log_min_duration_statement=1000
+      # Write-heavy ingest: fewer, smoother checkpoints so commit latency does not spike
+      # (see DECISIONS D-041). Durability is unchanged: fsync and synchronous_commit stay on.
+      - -c
+      - max_wal_size=4GB
+      - -c
+      - checkpoint_timeout=15min
+      - -c
+      - checkpoint_completion_target=0.9
+      - -c
+      - wal_buffers=16MB
+      - -c
+      - log_checkpoints=on
+    ports:
+      - "${PG_HOST_PORT:-55432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aumbram -d aumbram"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # One-shot: apply migrations and load reference data (stories/products/creators)
+  # generated deterministically by the provided mock-data generator.
+  setup:
+    build:
+      context: .
+      target: runtime
+    image: aumbram-backend:local
+    environment: *app-env
+    command:
+      - sh
+      - -c
+      - node dist/src/main/cli.js migrate && node shared/mock-data/generate.mjs --events 0 --out /tmp/ref && node dist/src/main/cli.js seed /tmp/ref
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    image: aumbram-backend:local
+    environment:
+      <<: *app-env
+      PORT: 8080
+    command: ["node", "dist/src/main/api.js"]
+    ports:
+      - "${API_HOST_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/health >/dev/null || exit 1"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  worker:
+    image: aumbram-backend:local
+    environment:
+      <<: *app-env
+      WORKER_METRICS_PORT: 9091
+    command: ["node", "dist/src/main/worker.js"]
+    ports:
+      - "${WORKER_HOST_PORT:-9091}:9091"
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  # ---- tools (not started by `docker compose up`) ----
+  demo:
+    profiles: ["tools"]
+    image: aumbram-backend:local
+    environment:
+      <<: *app-env
+      API_URL: http://api:8080
+    command: ["node", "dist/scripts/demo.js"]
+    depends_on:
+      api:
+        condition: service_healthy
+
+  test:
+    profiles: ["tools"]
+    build:
+      context: .
+      target: dev
+    image: aumbram-backend:dev
+    environment:
+      <<: *app-env
+      TEST_DATABASE_URL: postgres://aumbram:aumbram@postgres:5432/aumbram_test
+    command: ["npm", "test"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Load test from inside the compose network (DECISIONS D-042). Needs the big CSV:
+  #   node shared/mock-data/generate.mjs --events 500000 --out shared/mock-data/big
+  loadtest:
+    profiles: ["tools"]
+    image: aumbram-backend:local
+    environment:
+      <<: *app-env
+      API_URL: http://api:8080
+      WORKER_METRICS_URL: http://worker:9091/metrics
+    working_dir: /app
+    user: root
+    command: ["node", "dist/loadtest/replay.js", "--file", "/data/events.csv", "--rate", "2500", "--duration", "150"]
+    volumes:
+      - ./shared/mock-data/big:/data:ro
+      - ./loadtest/results:/app/loadtest/results
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:

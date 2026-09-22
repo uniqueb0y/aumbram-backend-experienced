@@ -1,0 +1,237 @@
+{
+  "machine": {
+    "cpus": 8,
+    "cpuModel": "Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz",
+    "ramGb": 4
+  },
+  "config": {
+    "file": "/data/events.csv",
+    "salt": "run5",
+    "targetRate": 2500,
+    "batch": 100,
+    "durationS": 150,
+    "exhaustedInput": false
+  },
+  "throughput": {
+    "sendSeconds": 150.2,
+    "batchesSent": 3751,
+    "acceptedEventsPerSec": 2473,
+    "offeredEventsPerSec": 2498
+  },
+  "latencyMs": {
+    "p50": 42.65457199999946,
+    "p95": 1190.634508999996,
+    "p99": 2970.271799000002,
+    "max": 4215.401920000004
+  },
+  "responses": {
+    "202": 3751
+  },
+  "rates": {
+    "errorRate": 0,
+    "rate429": 0,
+    "rate503": 0,
+    "retries": 0,
+    "networkErrors": 0,
+    "skippedForInFlight": 0
+  },
+  "events": {
+    "accepted": 371464,
+    "duplicates": 3636,
+    "rejected": 0
+  },
+  "lag": {
+    "drainedSecondsAfterLoad": 1.733,
+    "eventToProcessedP95": "<= 2 s",
+    "eventToProcessedP99": "<= 2 s",
+    "samples": [
+      {
+        "t": 5,
+        "phase": "load",
+        "eventDepth": 200,
+        "oldestAgeSeconds": 0.074
+      },
+      {
+        "t": 10,
+        "phase": "load",
+        "eventDepth": 100,
+        "oldestAgeSeconds": 0.024
+      },
+      {
+        "t": 15,
+        "phase": "load",
+        "eventDepth": 696,
+        "oldestAgeSeconds": 0.261
+      },
+      {
+        "t": 20,
+        "phase": "load",
+        "eventDepth": 297,
+        "oldestAgeSeconds": 0.109
+      },
+      {
+        "t": 25,
+        "phase": "load",
+        "eventDepth": 498,
+        "oldestAgeSeconds": 0.378
+      },
+      {
+        "t": 31,
+        "phase": "load",
+        "eventDepth": 394,
+        "oldestAgeSeconds": 0.088
+      },
+      {
+        "t": 35,
+        "phase": "load",
+        "eventDepth": 2080,
+        "oldestAgeSeconds": 1.425
+      },
+      {
+        "t": 41,
+        "phase": "load",
+        "eventDepth": 395,
+        "oldestAgeSeconds": 0.15
+      },
+      {
+        "t": 45,
+        "phase": "load",
+        "eventDepth": 194,
+        "oldestAgeSeconds": 0.168
+      },
+      {
+        "t": 50,
+        "phase": "load",
+        "eventDepth": 196,
+        "oldestAgeSeconds": 0.07
+      },
+      {
+        "t": 56,
+        "phase": "load",
+        "eventDepth": 695,
+        "oldestAgeSeconds": 0.332
+      },
+      {
+        "t": 63,
+        "phase": "load",
+        "eventDepth": 5542,
+        "oldestAgeSeconds": 1.555
+      },
+      {
+        "t": 65,
+        "phase": "load",
+        "eventDepth": 99,
+        "oldestAgeSeconds": 0.044
+      },
+      {
+        "t": 71,
+        "phase": "load",
+        "eventDepth": 100,
+        "oldestAgeSeconds": 0.291
+      },
+      {
+        "t": 75,
+        "phase": "load",
+        "eventDepth": 99,
+        "oldestAgeSeconds": 0.043
+      },
+      {
+        "t": 81,
+        "phase": "load",
+        "eventDepth": 399,
+        "oldestAgeSeconds": 0.295
+      },
+      {
+        "t": 86,
+        "phase": "load",
+        "eventDepth": 3747,
+        "oldestAgeSeconds": 1.495
+      },
+      {
+        "t": 90,
+        "phase": "load",
+        "eventDepth": 297,
+        "oldestAgeSeconds": 0.124
+      },
+      {
+        "t": 95,
+        "phase": "load",
+        "eventDepth": 198,
+        "oldestAgeSeconds": 0.082
+      },
+      {
+        "t": 100,
+        "phase": "load",
+        "eventDepth": 294,
+        "oldestAgeSeconds": 0.112
+      },
+      {
+        "t": 105,
+        "phase": "load",
+        "eventDepth": 596,
+        "oldestAgeSeconds": 0.089
+      },
+      {
+        "t": 110,
+        "phase": "load",
+        "eventDepth": 100,
+        "oldestAgeSeconds": 0.031
+      },
+      {
+        "t": 115,
+        "phase": "load",
+        "eventDepth": 1581,
+        "oldestAgeSeconds": 0.788
+      },
+      {
+        "t": 122,
+        "phase": "load",
+        "eventDepth": 1287,
+        "oldestAgeSeconds": 1.057
+      },
+      {
+        "t": 125,
+        "phase": "load",
+        "eventDepth": 198,
+        "oldestAgeSeconds": 0.073
+      },
+      {
+        "t": 130,
+        "phase": "load",
+        "eventDepth": 695,
+        "oldestAgeSeconds": 0.264
+      },
+      {
+        "t": 136,
+        "phase": "load",
+        "eventDepth": 296,
+        "oldestAgeSeconds": 0.241
+      },
+      {
+        "t": 140,
+        "phase": "load",
+        "eventDepth": 297,
+        "oldestAgeSeconds": 0.101
+      },
+      {
+        "t": 145,
+        "phase": "load",
+        "eventDepth": 99,
+        "oldestAgeSeconds": 0.023
+      },
+      {
+        "t": 151,
+        "phase": "drain",
+        "eventDepth": 596,
+        "oldestAgeSeconds": 0.936
+      }
+    ]
+  },
+  "correctness": {
+    "uniqueIdsSent": 371464,
+    "storedInEvents": 371464,
+    "stillQueued": 0,
+    "processed": 371464,
+    "pass": true
+  }
+}
