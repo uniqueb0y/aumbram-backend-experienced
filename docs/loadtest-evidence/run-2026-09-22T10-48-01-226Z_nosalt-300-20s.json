@@ -1,0 +1,80 @@
+{
+  "machine": {
+    "cpus": 8,
+    "cpuModel": "Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz",
+    "ramGb": 8
+  },
+  "config": {
+    "file": "shared/mock-data/big/events.csv",
+    "targetRate": 300,
+    "batch": 100,
+    "durationS": 20,
+    "exhaustedInput": false
+  },
+  "throughput": {
+    "sendSeconds": 20,
+    "batchesSent": 61,
+    "acceptedEventsPerSec": 0,
+    "offeredEventsPerSec": 305
+  },
+  "latencyMs": {
+    "p50": 62.951099999998405,
+    "p95": 81.82439999999997,
+    "p99": 453.6462999999994,
+    "max": 453.6462999999994
+  },
+  "responses": {
+    "202": 61
+  },
+  "rates": {
+    "errorRate": 0,
+    "rate429": 0,
+    "rate503": 0,
+    "retries": 0,
+    "networkErrors": 0,
+    "skippedForInFlight": 0
+  },
+  "events": {
+    "accepted": 0,
+    "duplicates": 6100,
+    "rejected": 0
+  },
+  "lag": {
+    "drainedSecondsAfterLoad": 0.104,
+    "eventToProcessedP95": "n/a",
+    "eventToProcessedP99": "n/a",
+    "samples": [
+      {
+        "t": 5,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 10,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 15,
+        "phase": "load",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      },
+      {
+        "t": 20,
+        "phase": "drain",
+        "eventDepth": 0,
+        "oldestAgeSeconds": 0
+      }
+    ]
+  },
+  "correctness": {
+    "uniqueIdsSent": 6047,
+    "storedInEvents": 6047,
+    "stillQueued": 0,
+    "processed": 6047,
+    "pass": true
+  }
+}
