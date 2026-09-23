@@ -56,6 +56,7 @@ Every decision taken on this project, with the reason it was made. **Skim the in
 | D-042 | TOOLING | ***Official load-test numbers come from inside the compose network; host-side numbers are reported alongside*** | Accepted |
 | D-043 | IMPLEMENTATION | ***Rejected experiment: making the worker wait for fuller batches (fewer commits) did not reduce ingest tail latency; reverted*** | Rejected |
 | D-044 | TOOLING | ***Latency tail is attributed to host memory pressure (measured), not the design; reported honestly, not tuned away with unsafe settings*** | Accepted |
+| D-045 | TOOLING | ***Postgres credentials parameterised in `docker-compose.yml`, sourced from `.env`; no literal password anywhere in a committed file*** | Accepted |
 
 ---
 
@@ -312,3 +313,9 @@ Every decision taken on this project, with the reason it was made. **Skim the in
   - Runs degraded as the data set grew (0 → 1.5M events), consistent with a bigger working set under host memory pressure. The one checkpoint-driven stall seen earlier was fixed by D-041.
   - Steady-state cost with no stall: ~10 ms `EXPLAIN ANALYZE` for the 100-row insert, plus a ~4 ms fdatasync.
 - **Consequence:** On this 8 GB laptop the throughput, correctness and lag targets are met in every run, but the p95 < 200 ms target is not met reliably. `docs/loadtest.md` lists every run, including the failures. The production answer (dedicated disks, no nested virtualisation, Kafka as the ingest log) is in `docs/design.md`.
+
+## D-045: Postgres credentials are parameterised, not literal, in `docker-compose.yml`
+- **Category:** TOOLING · **Date:** 2026-09-23 · **Status:** Accepted
+- **Decision:** ***`POSTGRES_USER`/`POSTGRES_PASSWORD`/`POSTGRES_DB`/`POSTGRES_TEST_DB` are read from `.env` (docker compose loads it automatically) with dev-only fallbacks (`${POSTGRES_PASSWORD:-aumbram}`), and every place that previously spelled out `aumbram:aumbram` — the `postgres` service's own environment, its healthcheck, `DATABASE_URL` in the `x-app-env` anchor, and `TEST_DATABASE_URL` on the `test` service — now builds the connection string from those four variables instead of repeating the literal. `.env.example` documents the variables (with the same non-secret placeholder values it already had); a git-ignored `.env` holds the actual working values for this checkout.***
+- **Why:** D-012 already said secrets don't get committed, but the compose file still spelled `aumbram`/`aumbram` in five places, so changing the password meant editing YAML in five places and the value lived in a tracked file either way. Sourcing everything from one `.env` (already git-ignored, `.dockerignore`'d out of the image, and excluded via `!.env.example`) means: one place to change a credential, no secret in a tracked file even as a "dev default", and the pattern extends cleanly if a real password is ever needed (CI, a shared dev box) — just override the `.env` values, no code or compose changes.
+- **Consequences:** None functionally — the interpolated defaults are byte-identical to the old literals, so `docker compose up` and `docker compose run --rm test` behave exactly as before for anyone without a `.env`. Verified with `docker compose config`.
