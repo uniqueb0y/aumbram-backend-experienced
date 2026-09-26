@@ -177,7 +177,3 @@ Each is logged with its reason in DECISIONS.md.
   - One load-test run was discarded as invalid (it replayed already-stored ids).
   - An unimplemented session-stitching config flag was removed rather than left in.
 - **Understanding:** I have reviewed the design and can explain and modify any part of it.
-
-## Time spent
-
-_To be filled in by the candidate._
